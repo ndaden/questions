@@ -1,8 +1,11 @@
 ### Questions
 
-Install :
+## API
 
-`yarn`
+Install : `yarn`
+Start : `yarn run backend`
 
-Start :
-`yarn start`
+## FRONT
+
+Install : `yarn`
+Start : `yarn run frontend`
