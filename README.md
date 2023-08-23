@@ -12,6 +12,6 @@ Start : `yarn run frontend`
 
 ## Environment variables to define
 
-MONGODB_USERNAME : mongodb username \n
-MONGODB_PASSWORD : mongodb password \n
-MONGODB_URL : mongodb address \n
+MONGODB_USERNAME : mongodb username
+MONGODB_PASSWORD : mongodb password
+MONGODB_URL : mongodb address
