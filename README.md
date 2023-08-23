@@ -2,16 +2,16 @@
 
 ## API
 
-Install : `yarn`
-Start : `yarn run backend`
+Install : `yarn` <br/>
+Start : `yarn run backend`<br/>
 
 ## FRONT
 
-Install : `yarn`
-Start : `yarn run frontend`
+Install : `yarn`<br/>
+Start : `yarn run frontend`<br/>
 
 ## Environment variables to define
 
-MONGODB_USERNAME : mongodb username
-MONGODB_PASSWORD : mongodb password
-MONGODB_URL : mongodb address
+MONGODB_USERNAME : mongodb username<br/>
+MONGODB_PASSWORD : mongodb password<br/>
+MONGODB_URL : mongodb address<br/>
