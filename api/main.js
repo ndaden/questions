@@ -15,8 +15,11 @@ app.get("/", (req, resp) => {
 });
 
 app.use("/user", userController);
+/* app.use("/business", userController);
+app.use("/appointment", userController);
+app.use("/service", userController); */
 
 app.listen(3001, () => {
   console.log("Api running on port 3001");
-  connectToDatabase(mongoDb_ConnectionString, mongoDb_dbName);
+  connectToDatabase(mongoDb_ConnectionString, mongoDb_dbName, true);
 });
