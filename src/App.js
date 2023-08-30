@@ -1,40 +1,20 @@
-import { Pagination } from "@nextui-org/react";
-import QInput from "./components/QInput";
-import QLink from "./components/QLink";
+import {
+  Route,
+  RouterProvider,
+  Routes,
+  createBrowserRouter,
+} from "react-router-dom";
+import Home from "./Home";
+import Admin from "./Admin";
 import QNavbar from "./components/QNavbar";
-import QQuestion from "./components/QQuestion";
-import QAutoComplete from "./components/QAutocomplete";
+import QLink from "./components/QLink";
 
+const router = createBrowserRouter([{ path: "*", Component: Root }]);
 function App() {
   return (
     <div className="relative flex flex-col h-screen dark text-foreground bg-background">
       <QNavbar brandLabel={"QUESTIONS"} />
-      <main className="container mx-auto max-w-6xl px-6 flex-grow">
-        <div className="my-3">
-          <QInput
-            label="Ma question est, "
-            placeholder="saisir une question"
-            type="text"
-            className="max-w-xl m-auto"
-          />
-        </div>
-        <div className="my-3">
-          <QAutoComplete />
-        </div>
-
-        <div className="m-auto">
-          <QQuestion />
-          <QQuestion />
-          <QQuestion />
-        </div>
-        <div className="max-w-6xl">
-          <Pagination
-            total={10}
-            initialPage={1}
-            className="mx-auto max-w-[50%]"
-          />
-        </div>
-      </main>
+      <RouterProvider router={router} />
       <footer className="w-full flex items-center justify-center py-3">
         <QLink
           isExternal
@@ -46,6 +26,15 @@ function App() {
         </QLink>
       </footer>
     </div>
+  );
+}
+
+function Root() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/admin" element={<Admin />} />
+    </Routes>
   );
 }
 

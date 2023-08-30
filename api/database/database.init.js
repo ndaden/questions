@@ -7,7 +7,6 @@ const AppointmentModel = require("../schemas/appointment.schema");
 const initDatabase = async (deleteAll = false) => {
   if (deleteAll) {
     await ServiceModel.deleteMany({});
-
     await BusinessModel.deleteMany({});
     await RoleModel.deleteMany({});
     await UserModel.deleteMany({});

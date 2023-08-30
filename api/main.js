@@ -6,6 +6,9 @@ const { connectToDatabase } = require("./database");
 const { mongoDb_ConnectionString, mongoDb_dbName } = require("./constant");
 
 const userController = require("./controllers/user.controller");
+const businessController = require("./controllers/business.controller");
+const serviceController = require("./controllers/service.controller");
+const appointmentController = require("./controllers/appointment.controller");
 
 app.use(express.json());
 app.use(cors());
@@ -15,11 +18,11 @@ app.get("/", (req, resp) => {
 });
 
 app.use("/user", userController);
-/* app.use("/business", userController);
-app.use("/appointment", userController);
-app.use("/service", userController); */
+app.use("/business", businessController);
+app.use("/service", serviceController);
+app.use("/appointment", appointmentController);
 
 app.listen(3001, () => {
   console.log("Api running on port 3001");
-  connectToDatabase(mongoDb_ConnectionString, mongoDb_dbName, true);
+  connectToDatabase(mongoDb_ConnectionString, mongoDb_dbName, false);
 });
