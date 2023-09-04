@@ -18,7 +18,7 @@ const QNavbar = ({
       </NavbarBrand>
       <NavbarContent className="sm:flex gap-4" justify="center">
         {links.map((link) => (
-          <NavbarItem isActive={!!link.isActive}>
+          <NavbarItem isActive={!!link.isActive} key={link.label}>
             <Link
               color={!!link.isActive ? "" : "foreground"}
               href="#"

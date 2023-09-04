@@ -2,15 +2,13 @@ const getUsersQuery = async () =>
   (await fetch("http://localhost:3001/user")).json();
 
 const createUserQuery = async (formData) =>
-  (
-    await fetch("http://localhost:3001/user/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-  ).json;
+  await fetch("http://localhost:3001/user/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  });
 
 const getBusinessesQuery = async () =>
   (await fetch("http://localhost:3001/business")).json();

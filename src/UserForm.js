@@ -1,16 +1,32 @@
-import { Button, Input } from "@nextui-org/react";
+import { Button, Checkbox, Input } from "@nextui-org/react";
 import useMutateUser from "./hooks/useMutateUser";
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 const UserForm = () => {
-  const { mutateUser } = useMutateUser();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors = {}, isValid },
+    watch,
+  } = useForm();
+  const { mutateUser, isLoading, data: mutateUserResult } = useMutateUser();
+  const [serverError, setServerError] = useState({});
 
-  const submitUserForm = async (e) => {
-    const form = document.querySelector("form[name=userForm]");
-    const formData = new FormData(form);
-    const jsonUserData = toDatabaseUser(Object.fromEntries(formData.entries()));
+  useEffect(() => {
+    const getResult = async () => {
+      const result = await mutateUserResult?.json();
+      setServerError(result);
+    };
 
-    await mutateUser(jsonUserData);
-    e.preventDefault();
+    getResult();
+  }, [mutateUserResult]);
+
+  const submitUserForm = async (data) => {
+    if (isValid) {
+      const jsonUserData = toDatabaseUser(data);
+      await mutateUser(jsonUserData);
+    }
   };
 
   const toDatabaseUser = (formData) => {
@@ -31,20 +47,57 @@ const UserForm = () => {
   };
 
   return (
-    <form name="userForm" method="post">
+    <form name="userForm" onSubmit={handleSubmit(submitUserForm)}>
       <div className="flex gap-4 mb-6">
         <Input
+          {...register("username", {
+            required: { value: true, message: "Username is mandatory." },
+            min: {
+              value: 5,
+              message: "Username must contain more than 5 characters.",
+            },
+            max: {
+              value: 20,
+              message: "Username must contain less than 20 characters.",
+            },
+            pattern: {
+              value: /^[a-zA-Z0-9]+$/,
+              message: "Username format is invalid.",
+            },
+          })}
           type="text"
           label="Username"
-          name="username"
-          required
+          validationState={
+            errors?.username || serverError?.username ? "invalid" : "valid"
+          }
+          errorMessage={
+            errors?.username?.message || serverError?.username?.message
+          }
           size="sm"
         />
         <Input
           type="password"
           label="Password"
-          name="password"
-          required
+          {...register("password", {
+            required: { value: true, message: "Password is mandatory" },
+          })}
+          validationState={errors?.password ? "invalid" : "valid"}
+          errorMessage={errors?.password?.message}
+          size="sm"
+        />
+        <Input
+          type="password"
+          label="Password (again)"
+          {...register("passwordAgain", {
+            required: {
+              value: true,
+              message: "Type your password a second time.",
+            },
+            validate: (value) =>
+              value === watch("password") || "Passwords don't match.",
+          })}
+          validationState={errors?.passwordAgain ? "invalid" : "valid"}
+          errorMessage={errors?.passwordAgain?.message}
           size="sm"
         />
       </div>
@@ -52,23 +105,54 @@ const UserForm = () => {
         <Input
           type="text"
           label="First name"
-          name="firstName"
-          required
+          {...register("firstName", {
+            required: { value: true, message: "First name is mandatory" },
+          })}
+          validationState={errors?.firstName ? "invalid" : "valid"}
+          errorMessage={errors?.firstName?.message}
           size="sm"
         />
         <Input
           type="text"
           label="Last name"
-          name="lastName"
-          required
+          {...register("lastName", {
+            required: { value: true, message: "Last name is mandatory" },
+          })}
+          validationState={errors?.lastName ? "invalid" : "valid"}
+          errorMessage={errors?.lastName?.message}
           size="sm"
         />
       </div>
       <div className="flex gap-4 mb-6">
-        <Input type="email" name="email" label="Email" required size="sm" />
-        <Input type="text" label="Address" name="address" required size="sm" />
+        <Input
+          type="email"
+          {...register("email", {
+            required: { value: true, message: "Email is mandatory." },
+            pattern: { value: /\S+@\S+\.\S+/, message: "Email is invalid." },
+          })}
+          label="Email"
+          formNoValidate
+          validationState={errors?.email ? "invalid" : "valid"}
+          errorMessage={errors?.email?.message}
+          size="sm"
+        />
+        <Input
+          type="text"
+          label="Address"
+          {...register("address", {
+            required: { value: true, message: "Address is mandatory" },
+          })}
+          validationState={errors?.address ? "invalid" : "valid"}
+          errorMessage={errors?.address?.message}
+          size="sm"
+        />
       </div>
-      <Button color="primary" type="submit" onClick={submitUserForm}>
+      <div className="gap-4 mb-6">
+        <Checkbox {...register("owner")} value={"owner"} className="mr-3">
+          Owner Account
+        </Checkbox>
+      </div>
+      <Button color="primary" type="submit" disabled={isLoading}>
         Create user
       </Button>
     </form>
