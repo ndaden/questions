@@ -1,6 +1,7 @@
 import {
   Accordion,
   AccordionItem,
+  Button,
   Chip,
   CircularProgress,
   Table,
@@ -15,6 +16,10 @@ import useFetchBusinesses from "./hooks/useFetchBusinesses";
 import useFetchServices from "./hooks/useFetchServices";
 import useFetchAppointments from "./hooks/useFetchAppointments";
 import UserForm from "./UserForm";
+import { BsTrash } from "react-icons/bs";
+import { deleteUserQuery } from "./hooks/queries";
+import { USERS_KEY } from "./hooks/queryKeys";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Admin = () => {
   const { isLoading: isLoadingUsers, users } = useFetchUsers();
@@ -22,6 +27,13 @@ const Admin = () => {
   const { isLoading: isLoadingServices, services } = useFetchServices();
   const { isLoading: isLoadingAppointments, appointments } =
     useFetchAppointments();
+
+  const queryCache = useQueryClient();
+
+  const deleteUserHandler = async (id) => {
+    await deleteUserQuery(id);
+    await queryCache.invalidateQueries({ queryKey: [USERS_KEY] });
+  };
 
   const isLoading =
     isLoadingUsers ||
@@ -42,6 +54,7 @@ const Admin = () => {
           <TableColumn>Username</TableColumn>
           <TableColumn>Email</TableColumn>
           <TableColumn>Status</TableColumn>
+          <TableColumn>Actions</TableColumn>
         </TableHeader>
         <TableBody>
           {users.map((user) => (
@@ -50,6 +63,14 @@ const Admin = () => {
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.email.address}</TableCell>
               <TableCell>{user.active ? "Active" : "Inactive"}</TableCell>
+              <TableCell>
+                <Button
+                  isIconOnly
+                  onClick={async () => await deleteUserHandler(user._id)}
+                >
+                  <BsTrash />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -10,6 +10,14 @@ const createUserQuery = async (formData) =>
     body: JSON.stringify(formData),
   });
 
+const deleteUserQuery = async (id) =>
+  await fetch(`http://localhost:3001/user/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
 const getBusinessesQuery = async () =>
   (await fetch("http://localhost:3001/business")).json();
 
@@ -22,6 +30,7 @@ const getAppointmentsQuery = async () =>
 export {
   getUsersQuery,
   createUserQuery,
+  deleteUserQuery,
   getBusinessesQuery,
   getServicesQuery,
   getAppointmentsQuery,

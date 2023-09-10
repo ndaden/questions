@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUsersQuery } from "./queries";
+import { USERS_KEY } from "./queryKeys";
 
 const useFetchUsers = () => {
   const {
@@ -7,10 +8,9 @@ const useFetchUsers = () => {
     isLoading,
     refetch: refetchUsers,
   } = useQuery({
-    queryKey: ["users"],
+    queryKey: [USERS_KEY],
     queryFn: getUsersQuery,
     enabled: true,
-    staleTime: 60000,
   });
 
   return { users, refetchUsers, isLoading };

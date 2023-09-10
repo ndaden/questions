@@ -11,12 +11,12 @@ const UserForm = () => {
     watch,
   } = useForm();
   const { mutateUser, isLoading, data: mutateUserResult } = useMutateUser();
-  const [serverError, setServerError] = useState({});
+  const [serverResponse, setServerResponse] = useState({});
 
   useEffect(() => {
     const getResult = async () => {
       const result = await mutateUserResult?.json();
-      setServerError(result);
+      setServerResponse(result);
     };
 
     getResult();
@@ -68,13 +68,17 @@ const UserForm = () => {
           type="text"
           label="Username"
           validationState={
-            errors?.username || serverError?.username ? "invalid" : "valid"
+            errors?.username || serverResponse?.error?.username
+              ? "invalid"
+              : "valid"
           }
           errorMessage={
-            errors?.username?.message || serverError?.username?.message
+            errors?.username?.message ||
+            serverResponse?.error?.username?.message
           }
           size="sm"
         />
+        {console.log(errors, serverResponse)}
         <Input
           type="password"
           label="Password"

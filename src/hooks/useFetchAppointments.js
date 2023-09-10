@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAppointmentsQuery } from "./queries";
+import { APPOINTMENTS_KEY } from "./queryKeys";
 
 const useFetchAppointments = () => {
   const {
@@ -7,7 +8,7 @@ const useFetchAppointments = () => {
     isLoading,
     refetch: refetchAppointments,
   } = useQuery({
-    queryKey: ["appointments"],
+    queryKey: [APPOINTMENTS_KEY],
     queryFn: getAppointmentsQuery,
     enabled: true,
   });

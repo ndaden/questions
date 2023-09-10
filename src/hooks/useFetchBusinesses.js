@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getBusinessesQuery } from "./queries";
+import { BUSINESSES_KEY } from "./queryKeys";
 
 const useFetchBusinesses = () => {
   const {
@@ -7,7 +8,7 @@ const useFetchBusinesses = () => {
     isLoading,
     refetch: refetchBusinesses,
   } = useQuery({
-    queryKey: ["businesses"],
+    queryKey: [BUSINESSES_KEY],
     queryFn: getBusinessesQuery,
     enabled: true,
   });

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getServicesQuery } from "./queries";
+import { SERVICES_KEY } from "./queryKeys";
 
 const useFetchServices = () => {
   const {
@@ -7,7 +8,7 @@ const useFetchServices = () => {
     isLoading,
     refetch: refetchServices,
   } = useQuery({
-    queryKey: ["services"],
+    queryKey: [SERVICES_KEY],
     queryFn: getServicesQuery,
     enabled: true,
   });
