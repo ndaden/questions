@@ -8,6 +8,8 @@ import Home from "./Home";
 import Admin from "./Admin";
 import QNavbar from "./components/QNavbar";
 import QLink from "./components/QLink";
+import Business from "./Business";
+import Appointment from "./Appointment";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 function App() {
@@ -34,6 +36,8 @@ function Root() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/business/:id" element={<Business />} />
+      <Route path="/appointment" element={<Appointment />} />
     </Routes>
   );
 }

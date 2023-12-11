@@ -2,24 +2,36 @@ import { Button, Checkbox, Input } from "@nextui-org/react";
 import useMutateUser from "./hooks/useMutateUser";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import useFetchRoles from "./hooks/useFetchRoles";
+import { useQueryClient } from "@tanstack/react-query";
+import { USERS_KEY } from "./hooks/queryKeys";
+import QModal from "./components/QModal";
 
 const UserForm = () => {
+  const queryCache = useQueryClient();
   const {
     register,
     handleSubmit,
     formState: { errors = {}, isValid },
     watch,
+    reset,
   } = useForm();
+  const { roles } = useFetchRoles();
   const { mutateUser, isLoading, data: mutateUserResult } = useMutateUser();
-  const [serverResponse, setServerResponse] = useState({});
+  const [serverResponse, setServerResponse] = useState();
 
   useEffect(() => {
     const getResult = async () => {
       const result = await mutateUserResult?.json();
+      if (result && !result.error) {
+        await queryCache.invalidateQueries({ queryKey: [USERS_KEY] });
+        reset();
+      }
       setServerResponse(result);
     };
 
     getResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mutateUserResult]);
 
   const submitUserForm = async (data) => {
@@ -30,9 +42,12 @@ const UserForm = () => {
   };
 
   const toDatabaseUser = (formData) => {
+    const standardRole =
+      roles.length > 0 ? roles.find((role) => role.name === "standard") : {};
     return {
       username: formData.username,
       password: formData.password,
+      roles: [standardRole._id],
       email: {
         address: formData.email,
       },
@@ -78,7 +93,20 @@ const UserForm = () => {
           }
           size="sm"
         />
-        {console.log(errors, serverResponse)}
+        <Input
+          type="email"
+          {...register("email", {
+            required: { value: true, message: "Email is mandatory." },
+            pattern: { value: /\S+@\S+\.\S+/, message: "Email is invalid." },
+          })}
+          label="Email"
+          formNoValidate
+          validationState={errors?.email ? "invalid" : "valid"}
+          errorMessage={errors?.email?.message}
+          size="sm"
+        />
+      </div>
+      <div className="flex gap-4 mb-6">
         <Input
           type="password"
           label="Password"
@@ -129,18 +157,6 @@ const UserForm = () => {
       </div>
       <div className="flex gap-4 mb-6">
         <Input
-          type="email"
-          {...register("email", {
-            required: { value: true, message: "Email is mandatory." },
-            pattern: { value: /\S+@\S+\.\S+/, message: "Email is invalid." },
-          })}
-          label="Email"
-          formNoValidate
-          validationState={errors?.email ? "invalid" : "valid"}
-          errorMessage={errors?.email?.message}
-          size="sm"
-        />
-        <Input
           type="text"
           label="Address"
           {...register("address", {
@@ -151,14 +167,10 @@ const UserForm = () => {
           size="sm"
         />
       </div>
-      <div className="gap-4 mb-6">
-        <Checkbox {...register("owner")} value={"owner"} className="mr-3">
-          Owner Account
-        </Checkbox>
-      </div>
       <Button color="primary" type="submit" disabled={isLoading}>
-        Create user
+        Create account
       </Button>
+      <QModal triggerOpenModal={serverResponse && !serverResponse.error} />
     </form>
   );
 };

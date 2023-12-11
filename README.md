@@ -7,6 +7,7 @@ Start : `yarn run backend`<br/>
 
 ## FRONT
 
+npx tailwindcss -i ./src/input.css -o ./public/output.css --watch
 Install : `yarn`<br/>
 Start : `yarn run frontend`<br/>
 

@@ -18,14 +18,25 @@ const deleteUserQuery = async (id) =>
     },
   });
 
-const getBusinessesQuery = async () =>
-  (await fetch("http://localhost:3001/business")).json();
+const getBusinessesQuery = async (id) =>
+  (
+    await fetch(`http://localhost:3001/business${id ? `?id=${id}` : `/`}`)
+  ).json();
 
-const getServicesQuery = async () =>
-  (await fetch("http://localhost:3001/service")).json();
+const getServicesQuery = async (id, businessId) =>
+  (
+    await fetch(
+      `http://localhost:3001/service${id ? `?id=${id}` : `/`}${
+        businessId ? `?businessId=${businessId}` : `/`
+      }`
+    )
+  ).json();
 
 const getAppointmentsQuery = async () =>
   (await fetch("http://localhost:3001/appointment")).json();
+
+const getRolesQuery = async () =>
+  (await fetch("http://localhost:3001/role")).json();
 
 export {
   getUsersQuery,
@@ -34,4 +45,5 @@ export {
   getBusinessesQuery,
   getServicesQuery,
   getAppointmentsQuery,
+  getRolesQuery,
 };

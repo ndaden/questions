@@ -8,16 +8,26 @@ const app = express();
 app.get("/", async (req, resp) => {
   try {
     const ownerid = req.query.ownerid;
+    const id = req.query.id;
+
+    if (id !== undefined && ObjectId.isValid(id)) {
+      const business = await BusinessModel.find({ _id: id })
+        .select("-__v")
+        .lean();
+
+      return resp.send(business);
+    }
+
     if (ownerid !== undefined && ObjectId.isValid(ownerid)) {
       const businesses = await BusinessModel.find({ owner: ownerid })
         .select("-__v")
         .lean();
 
       return resp.send(businesses);
-    } else {
-      const businesses = await BusinessModel.find().select("-__v").lean();
-      return resp.send(businesses);
     }
+
+    const businesses = await BusinessModel.find().select("-__v").lean();
+    return resp.send(businesses);
   } catch (e) {
     resp.send("Something Went Wrong" + e.message);
   }
